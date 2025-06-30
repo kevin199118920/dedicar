@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso Secreto con Amor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: black;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .titulo-princesa {
+            color: red;
+            font-family: 'Brush Script MT', cursive;
+            font-size: 3em;
+            font-weight: bold;
+            margin-top: 20px;
+            text-shadow: 0 0 15px red, 0 0 25px red;
+            z-index: 10;
+            position: relative;
+            text-align: center;
+            padding: 0 15px;
+            box-sizing: border-box;
+            white-space: nowrap;
+            min-width: 0;
+            font-size: clamp(1.5em, 7vw, 3em);
+        }
+
+        .login-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            z-index: 10;
+            margin-top: 50px;
+            max-width: 90%;
+            width: 400px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        input[type="password"] {
+            width: 100%;
+            max-width: 180px;
+            padding: 12px;
+            margin: 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1.3em;
+            text-align: center;
+            outline: none;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 12px 25px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #mensaje {
+            color: red;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        #mensaje-led {
+            display: none;
+            background-color: transparent;
+            padding: 20px;
+            text-align: center;
+            line-height: 1.3;
+            color: #00bfff;
+            font-family: Arial, sans-serif;
+            font-size: 1.5em;
+            text-shadow:
+                0 0 3px #00bfff,
+                0 0 6px #00bfff,
+                0 0 10px #ffffff;
+            font-weight: bold;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            z-index: 10;
+            max-width: 90%;
+            width: 800px;
+            box-sizing: border-box;
+            margin: 50px auto;
+        }
+        #mensaje-led p {
+            margin-bottom: 0.5em;
+            text-shadow:
+                0 0 3px #00bfff,
+                0 0 6px #00bfff,
+                0 0 10px #ffffff;
+        }
+        #mensaje-led strong {
+            color: #ff00ff;
+            text-shadow:
+                0 0 3px #ff00ff,
+                0 0 6px #ff00ff,
+                0 0 10px #ffffff;
+        }
+        #mensaje-led .firma {
+            margin-top: 1.5em;
+            text-align: right;
+            font-size: 1.2em;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 20px; /* Espacio entre los botones principales */
+            margin-top: 30px;
+            align-items: center;
+            width: 100%;
+        }
+
+        .main-button {
+            padding: 15px 30px;
+            background-color: #ff1493;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            width: 100%; /* Ajusta el ancho */
+            max-width: 300px; /* Ancho máximo para que no sean enormes */
+            box-sizing: border-box;
+        }
+        .main-button:hover {
+            background-color: #c71585;
+            transform: translateY(-2px);
+        }
+
+        /* ESTILO PARA EL BOTÓN DE PREGUNTA */
+        .main-button.question {
+            background-color: #9370DB; /* Púrpura suave */
+        }
+        .main-button.question:hover {
+            background-color: #7b5da7;
+        }
+
+        /* NUEVO ESTILO PARA EL BOTÓN DE JUEGUITO */
+        .main-button.jueguito {
+            background-color: #4CAF50; /* Verde, como el color que definimos antes */
+        }
+        .main-button.jueguito:hover {
+            background-color: #45a049;
+        }
+
+        /* CORAZONES - NO CAMBIAN */
+        .pixel-corazon {
+            position: absolute;
+            display: grid;
+            grid-template-columns: repeat(5, 10px);
+            grid-template-rows: repeat(5, 10px);
+            gap: 1px;
+            pointer-events: none;
+            animation: fall linear forwards;
+            opacity: 0;
+            z-index: 5;
+        }
+        .pixel {
+            background-color: red;
+            border-radius: 2px;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-50px) rotateZ(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotateZ(360deg);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .titulo-princesa {
+                font-size: 2em;
+            }
+            .login-container {
+                padding: 20px;
+            }
+            #mensaje-led {
+                font-size: 1.1em;
+                padding: 15px;
+            }
+            #mensaje-led .firma {
+                font-size: 1em;
+            }
+            .main-button {
+                font-size: 1.1em;
+                padding: 12px 25px;
+            }
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Brush+Script+MT&display=swap');
+    </style>
+</head>
+<body>
+
+    <div class="titulo-princesa">
+        Sorpresa para mi princesa hermosa ❤️
+    </div>
+
+    <div class="login-container" id="loginContainer">
+        <div id="formulario-acceso">
+            <h2>Introduce la contraseña (6 dígitos)</h2>
+            <input type="password" id="passwordInput" maxlength="6" placeholder="••••••">
+            <button onclick="verificarContrasena()">Acceder</button>
+            <p id="mensaje"></p>
+        </div>
+    </div>
+
+    <div id="mensaje-led">
+        <p>Es la primera vez que estoy haciendo algo como esto,</p>
+        <p>incluso en un lenguaje que ni siquiera me han enseñado.</p>
+        <p>Pero la verdad, quiero que seas la mujer más feliz de todo el mundo,</p>
+        <p>así que he creado todo esto para que, cuando te sientas triste o perdida, entres aquí.</p>
+        <p>Para que indirectamente pueda decirte todo lo que siempre te he amado hasta la actualidad.</p>
+        <p>No quiero que lo olvides, eres lo más importante para mí y eso nunca,</p>
+        <p><strong>NUNCA</strong> cambiará, no importa qué.</p>
+        <p class="firma">Con todo mi amor,<br> Kevin</p>
+
+        <div class="button-group">
+            <button class="main-button" onclick="openGallery()">Galería de Fotos</button>
+            <button class="main-button" onclick="openFrases()">Frases Motivacionales</button>
+            <a href="pregunta_especial.html" class="main-button question">?</a>
+            <a href="jueguito.html" target="_blank" class="main-button jueguito">Jueguito</a>
+        </div>
+    </div>
+
+    <script>
+        const CONTRASENAS_CORRECTAS = ["281125", "123456", "987654"]; // Tus contraseñas aquí
+
+        function verificarContrasena() {
+            const passwordInput = document.getElementById("passwordInput");
+            const mensajeDiv = document.getElementById("mensaje");
+            const formularioAcceso = document.getElementById("formulario-acceso");
+            const loginContainer = document.getElementById("loginContainer");
+            const mensajeLed = document.getElementById("mensaje-led");
+            // const buttonGroup = document.querySelector(".button-group"); // No es necesario seleccionarlo aquí directamente
+
+            const contrasenaIngresada = passwordInput.value;
+
+            if (!/^\d{6}$/.test(contrasenaIngresada)) {
+                mensajeDiv.textContent = "La contraseña debe ser de 6 dígitos numéricos.";
+                passwordInput.value = "";
+                return;
+            }
+
+            if (CONTRASENAS_CORRECTAS.includes(contrasenaIngresada)) {
+                mensajeDiv.textContent = "";
+                formularioAcceso.style.display = "none";
+                loginContainer.style.display = "none";
+
+                mensajeLed.style.display = "block";
+                // Los botones ya están dentro de #mensaje-led, que ahora es visible.
+                // No necesitamos cambiar el display del .button-group específicamente.
+                
+            } else {
+                mensajeDiv.textContent = "Contraseña incorrecta. Inténtalo de nuevo.";
+                passwordInput.value = "";
+            }
+        }
+
+        document.getElementById("passwordInput").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                verificarContrasena();
+            }
+        });
+
+        const estructuraCorazon = [
+            0, 1, 0, 1, 0,
+            1, 1, 1, 1, 1,
+            1, 1, 1, 1, 1,
+            0, 1, 1, 1, 0,
+            0, 0, 1, 0, 0
+        ];
+
+        function crearCorazonCayendo() {
+            const corazon = document.createElement('div');
+            corazon.classList.add('pixel-corazon');
+
+            const startX = Math.random() * (window.innerWidth - 50);
+            corazon.style.left = startX + 'px';
+
+            const duration = Math.random() * (7 - 3) + 3;
+            corazon.style.animationDuration = duration + 's';
+
+            const delay = Math.random() * 2;
+            corazon.style.animationDelay = delay + 's';
+
+            for (let i = 0; i < estructuraCorazon.length; i++) {
+                const pixel = document.createElement('div');
+                pixel.classList.add('pixel');
+                if (estructuraCorazon[i] === 0) {
+                    pixel.style.backgroundColor = 'transparent';
+                }
+                corazon.appendChild(pixel);
+            }
+
+            document.body.appendChild(corazon);
+
+            corazon.addEventListener('animationend', () => {
+                corazon.remove();
+            });
+        }
+
+        for (let i = 0; i < 30; i++) {
+            setTimeout(crearCorazonCayendo, Math.random() * 2000);
+        }
+
+        const corazonInterval = setInterval(crearCorazonCayendo, 300);
+
+        function openGallery() {
+            window.open('galeria.html', '_blank');
+        }
+
+        // FUNCIÓN PARA ABRIR LA PÁGINA DE FRASES
+        function openFrases() {
+            window.open('frases.html', '_blank'); // Abrirá el nuevo archivo frases.html
+        }
+        
+        // La función para abrir el jueguito no es necesaria ya que es un <a> tag directo
+    </script>
+
+</body>
+</html>

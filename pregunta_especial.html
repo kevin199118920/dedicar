@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorpresa Especial</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: black; /* Fondo negro */
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden; /* Oculta el desbordamiento de las frases que caen y las palabras "te amo" */
+            position: relative;
+        }
+
+        /* Estilos para la lluvia de "Te amo" */
+        .te-amo-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Permite hacer clic a través de ellos */
+            overflow: hidden;
+            z-index: 0; /* Asegura que esté detrás de todo lo demás */
+        }
+
+        .te-amo-word {
+            position: absolute;
+            font-size: 1.5em; /* Tamaño de la palabra */
+            color: #FF69B4; /* Rosa fuerte para "Te amo" */
+            opacity: 0;
+            white-space: nowrap;
+            animation: fallTeAmo linear infinite;
+        }
+
+        @keyframes fallTeAmo {
+            0% { transform: translateY(-50px) translateX(-50%); opacity: 0; }
+            5% { opacity: 0.8; }
+            95% { opacity: 0.8; }
+            100% { transform: translateY(100vh) translateX(-50%); opacity: 0; }
+        }
+
+        /* Contenedor del botón principal (que ahora es el corazón) */
+        #animationContainer { 
+            width: 200px; /* Tamaño del área del botón */
+            height: 200px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            margin-bottom: 20px; /* Espacio debajo del botón */
+        }
+
+        #revealButton {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%; /* Hace el botón circular */
+            background-color: rgba(255, 0, 0, 0.8); /* Fondo rojo para el círculo */
+            border: 5px solid white; /* Borde blanco alrededor del círculo */
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10em; /* ¡Tamaño gigante para el corazón emoji! */
+            line-height: 1; /* Asegura que el emoji se centre verticalmente */
+            color: white; /* Color del emoji (aunque el emoji por sí solo ya tiene color) */
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Sombra para el emoji */
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5); /* Resplandor blanco */
+        }
+
+        #revealButton:hover {
+            transform: scale(1.05); /* Ligeramente más grande al pasar el ratón */
+            background-color: rgba(255, 0, 0, 1); /* Rojo más intenso */
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.8); /* Resplandor más fuerte */
+        }
+        
+        /* Frases cayendo */
+        .falling-phrase {
+            position: absolute;
+            top: -50px; /* Empieza por encima de la pantalla */
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5em;
+            font-style: italic;
+            color: #FFC0CB; /* Rosa claro para las frases */
+            text-align: center; /* Centra el texto dentro de la frase */
+            padding: 0 10px; /* Pequeño padding horizontal para que no se pegue a los bordes */
+            box-sizing: border-box; /* Incluye padding en el ancho */
+            max-width: 90vw; /* Limita el ancho al 90% del viewport width */
+            word-wrap: break-word; /* Rompe palabras largas si no caben */
+            white-space: normal; /* Permite que el texto se ajuste a varias líneas */
+            animation: fallAndFade 8s linear forwards; /* 8 segundos para caer y desaparecer */
+            opacity: 0; /* Inicialmente invisible */
+            z-index: 5; /* Por encima del fondo, debajo del botón */
+        }
+
+        @keyframes fallAndFade {
+            0% { transform: translateY(-50px) translateX(-50%); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(100vh) translateX(-50%); opacity: 0; }
+        }
+
+        #backButton {
+            padding: 15px 30px;
+            background-color: #888;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            margin-top: 40px; /* Espacio para que las frases caigan */
+            z-index: 100; /* Asegura que esté siempre visible */
+        }
+        #backButton:hover {
+            background-color: #666;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 600px) {
+            #animationContainer {
+                width: 150px; /* Más pequeño para móviles */
+                height: 150px;
+            }
+            #revealButton {
+                font-size: 7em; /* Emoji más pequeño en móviles */
+            }
+            .falling-phrase {
+                font-size: 1.1em; /* Texto un poco más pequeño en móviles */
+                padding: 0 5px; /* Menos padding en móviles */
+            }
+            .te-amo-word {
+                font-size: 1.2em;
+            }
+            #backButton {
+                font-size: 1.1em;
+                padding: 12px 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="te-amo-rain" id="teAmoRain"></div> 
+    
+    <div id="animationContainer">
+        <button id="revealButton">💖</button> 
+    </div>
+
+    <button id="backButton" onclick="history.back()">Regresar a la Carta</button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const revealButton = document.getElementById('revealButton');
+            const teAmoRainContainer = document.getElementById('teAmoRain');
+
+            const phrases = [
+                "Eres mi persona favorita en todo el universo.",
+                "Cada momento contigo es un tesoro.",
+                "Mi amor por ti es infinito.",
+                "Haces mi mundo más brillante.",
+                "Siempre estás en mis pensamientos.",
+                "Contigo, cada día es una aventura.",
+                "Tu sonrisa ilumina mi vida.",
+                "Soy tan afortunado(a) de tenerte.",
+                "Eres el sueño hecho realidad.",
+                "Te amo más de lo que las palabras pueden decir.",
+                "Mi corazón te pertenece.",
+                "Juntos somos invencibles.",
+                "Gracias por ser tú.",
+                "Eres mi inspiración.",
+                // --- Nuevas frases añadidas ---
+                "Tu voz es mi melodía favorita.",
+                "Cada día me enamoro más de ti.",
+                "Eres mi refugio, mi paz.",
+                "No hay límite para mi amor por ti.",
+                "Me completas de una manera única.",
+                "Pienso en ti y sonrío.",
+                "Eres el regalo más hermoso de mi vida.",
+                "Gracias por cada risa, cada abrazo.",
+                "Contigo, el futuro es emocionante.",
+                "Mi vida cambió para mejor desde que llegaste."
+            ];
+            let phraseIndex = 0;
+
+            // --- Frases que caen ---
+            revealButton.addEventListener('click', function() {
+                // Si llegamos al final de las frases, reiniciamos el índice a 0
+                if (phraseIndex >= phrases.length) {
+                    phraseIndex = 0; 
+                }
+
+                const phraseText = phrases[phraseIndex];
+                const fallingPhraseDiv = document.createElement('div');
+                fallingPhraseDiv.classList.add('falling-phrase');
+                fallingPhraseDiv.textContent = phraseText;
+                document.body.appendChild(fallingPhraseDiv);
+
+                // Incrementar el índice para la siguiente frase
+                phraseIndex++;
+            });
+
+            // --- Lluvia de "Te amo" ---
+            const numberOfTeAmoWords = 20; 
+
+            function createTeAmoWord() {
+                const teAmoWord = document.createElement('div');
+                teAmoWord.classList.add('te-amo-word');
+                teAmoWord.textContent = 'Te amo';
+                teAmoWord.style.left = Math.random() * 100 + 'vw'; 
+                teAmoWord.style.animationDuration = (Math.random() * 8) + 5 + 's'; 
+                teAmoWord.style.animationDelay = Math.random() * 5 + 's'; 
+                teAmoRainContainer.appendChild(teAmoWord);
+
+                teAmoWord.addEventListener('animationend', () => {
+                    teAmoWord.remove();
+                    createTeAmoWord(); 
+                });
+            }
+
+            for (let i = 0; i < numberOfTeAmoWords; i++) {
+                createTeAmoWord();
+            }
+        });
+    </script>
+</body>
+</html>

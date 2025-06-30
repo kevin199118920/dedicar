@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poemas de Amor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: black;
+            margin: 0;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 30px 20px;
+            box-sizing: border-box;
+            color: white;
+        }
+
+        .content-container {
+            background-color: rgba(255, 192, 203, 0.1); /* Rosa pálido transparente */
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 95%;
+            width: 800px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+            text-align: center;
+            margin-bottom: 30px;
+            box-sizing: border-box;
+            border: 1px solid rgba(255, 192, 203, 0.3);
+            flex-grow: 1;
+        }
+
+        .content-container h3 {
+            color: #ffb6c1; /* Rosa más intenso para el título */
+            font-family: 'Brush Script MT', cursive;
+            font-size: 3em;
+            margin-bottom: 25px;
+            text-shadow: 0 0 10px #ffb6c1, 0 0 20px #ffffff;
+            font-size: clamp(2em, 8vw, 3em);
+        }
+
+        .poema {
+            margin-bottom: 30px;
+            font-size: 1.3em;
+            line-height: 1.6;
+            color: #fff0f5; /* Blanco rosado para el texto */
+            text-align: left; /* Alineado a la izquierda para mejor lectura de poemas */
+            padding: 0 15px; /* Espacio a los lados */
+            border-left: 3px solid #ff69b4; /* Pequeña barra decorativa */
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 90%;
+        }
+
+        .poema span {
+            display: block;
+            font-style: italic;
+            font-size: 0.9em;
+            margin-top: 10px;
+            color: #ffa07a; /* Tono coral para el autor */
+            text-align: right; /* Autor alineado a la derecha */
+        }
+        
+        .poema p {
+            margin: 0 0 10px 0; /* Espacio entre párrafos del poema */
+        }
+
+        #back-to-frases-button {
+            padding: 15px 30px;
+            background-color: #ff4500;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            margin-top: 30px;
+        }
+        #back-to-frases-button:hover {
+            background-color: #e63900;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 600px) {
+            .content-container {
+                padding: 20px;
+            }
+            .content-container h3 {
+                font-size: 2.2em;
+            }
+            .poema {
+                font-size: 1.1em;
+                padding: 0 10px;
+            }
+            #back-to-frases-button {
+                font-size: 1.1em;
+                padding: 12px 25px;
+            }
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Brush+Script+MT&display=swap');
+    </style>
+</head>
+<body>
+
+    <div class="content-container">
+        <h3>Poemas de Amor</h3>
+        
+        <div class="poema">
+            <p>"Te amo como se aman ciertas cosas oscuras,</p>
+            <p>secretamente, entre la sombra y el alma."</p>
+            <span>— Pablo Neruda</span>
+        </div>
+
+        <div class="poema">
+            <p>"Yo te quiero como el mar quiere al río,</p>
+            <p>como la noche quiere al día,</p>
+            <p>como el sol a la luna,</p>
+            <p>como la luz al día."</p>
+            <span>— Mario Benedetti</span>
+        </div>
+
+        <div class="poema">
+            <p>"Porque cada día te quiero más,</p>
+            <p>hoy más que ayer y menos que mañana."</p>
+            <span>— Julio Cortázar (atribuido comúnmente a Rosemonde Gerard)</span>
+        </div>
+
+        <div class="poema">
+            <p>"Tu risa me hace libre, me pone alas.</p>
+            <p>Soledades me quita, cárcel me arranca."</p>
+            <span>— Mario Benedetti</span>
+        </div>
+
+        <div class="poema">
+            <p>"Amarte es como vivir en un sueño,</p>
+            <p>donde todo es posible y nada es imposible,</p>
+            <p>donde el amor lo llena todo,</p>
+            <p>y la felicidad es eterna."</p>
+            <span>— Gabriela Mistral</span>
+        </div>
+
+        <div class="poema">
+            <p>"Si de noche ves que brillan,</p>
+            <p>en el fondo de mis ojos,</p>
+            <p>unas estrellitas raras,</p>
+            <p>es que te estoy mirando el alma."</p>
+            <span>— Mario Benedetti</span>
+        </div>
+
+        <div class="poema">
+            <p>"Si nada nos salva de la muerte,</p>
+            <p>al menos que el amor nos salve de la vida."</p>
+            <span>— Pablo Neruda</span>
+        </div>
+
+        <div class="poema">
+            <p>"Te quiero, como se quiere lo que no se tiene,</p>
+            <p>pero que se desea con el alma entera."</p>
+            <span>— Jaime Sabines</span>
+        </div>
+
+        <div class="poema">
+            <p>"Es tan corto el amor y tan largo el olvido."</p>
+            <span>— Pablo Neruda</span>
+        </div>
+
+        <div class="poema">
+            <p>"Puedo escribir los versos más tristes esta noche.</p>
+            <p>Yo la quise, y a veces ella también me quiso."</p>
+            <span>— Pablo Neruda</span>
+        </div>
+
+        <div class="poema">
+            <p>"Quiero hacer contigo lo que la primavera hace con los cerezos."</p>
+            <span>— Pablo Neruda</span>
+        </div>
+
+        <div class="poema">
+            <p>"Me gustas cuando callas porque estás como ausente,</p>
+            <p>y me oyes desde lejos, y mi voz no te toca."</p>
+            <span>— Pablo Neruda</span>
+        </div>
+
+        <div class="poema">
+            <p>"De todo mi amor, de todo mi cariño,</p>
+            <p>no queda sino el recuerdo de lo que fuimos.</p>
+            <p>Pero ese recuerdo es tan hermoso que me basta."</p>
+            <span>— Mario Benedetti</span>
+        </div>
+
+        <div class="poema">
+            <p>"No hay amor más sincero que el que nace de la ausencia.</p>
+            <p>Te amo más que ayer y menos que mañana."</p>
+            <span>— Rosemonde Gerard</span>
+        </div>
+
+        </div>
+
+    <button id="back-to-frases-button" onclick="history.back()">Regresar a Frases</button>
+
+</body>
+</html>

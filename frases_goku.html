@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frases de Goku</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: black; /* Fondo negro */
+            margin: 0;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 30px 20px;
+            box-sizing: border-box;
+            color: white;
+            position: relative; /* Necesario para los elementos flotantes */
+            z-index: 1; /* Asegura que el contenido esté por encima de la lluvia */
+        }
+
+        /* Estilos de la lluvia de esferas del dragón */
+        .dragon-ball-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Permite interactuar con los elementos debajo */
+            overflow: hidden;
+            z-index: 0; /* Asegura que esté detrás del contenido */
+        }
+
+        .dragon-ball {
+            position: absolute;
+            background-image: url('https://ik.imagekit.io/Httpm/71930606ad0004a.png?updatedAt=1751237483587'); /* ¡URL DE LA ESFERA INTEGRADA! */
+            background-size: contain;
+            background-repeat: no-repeat;
+            width: 30px; /* Tamaño de la esfera */
+            height: 30px;
+            animation: fall linear infinite;
+            opacity: 0.8;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            100% { transform: translateY(calc(100vh + 100px)) rotate(360deg); opacity: 0; }
+        }
+
+        .content-wrapper { /* Nuevo contenedor para el contenido principal, sin fondo naranja */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 95%;
+            width: 800px; /* Ancho consistente */
+            z-index: 10; /* Asegura que el contenido esté sobre la lluvia */
+            position: relative; /* Para que el z-index funcione */
+        }
+
+        .goku-image-container {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            border: 5px solid #ffdb58;
+            background-color: #333; /* Fondo si la imagen no carga rápido */
+        }
+
+        .goku-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .text-box {
+            background-color: rgba(255, 255, 255, 0.08); /* Un poco más visible sobre negro */
+            border: 1px solid rgba(255, 140, 0, 0.5); /* Borde naranja más distintivo */
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            width: 90%; /* Hacer los cuadros un poco más anchos */
+            max-width: 700px; /* Limitar el ancho máximo */
+            box-sizing: border-box;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .intro-text {
+            color: #ffd700;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .frase {
+            font-size: 1.3em;
+            line-height: 1.5;
+            color: #ffa07a;
+        }
+
+        h3 { /* Estilo para el título de la página */
+            color: #ff8c00;
+            font-family: 'Brush Script MT', cursive;
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #ff8c00, 0 0 20px #ffffff;
+            font-size: clamp(2em, 8vw, 3em);
+            text-align: center;
+            width: 100%; /* Asegura que el título también esté centrado */
+            z-index: 10;
+            position: relative;
+        }
+
+        #back-button-goku {
+            padding: 15px 30px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            margin-top: 30px;
+            z-index: 10;
+            position: relative;
+        }
+        #back-button-goku:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 600px) {
+            .goku-image-container {
+                width: 180px;
+                height: 180px;
+            }
+            .text-box {
+                width: 95%; /* Ajustar ancho en pantallas pequeñas */
+                padding: 15px;
+            }
+            .intro-text {
+                font-size: 1em;
+            }
+            .frase {
+                font-size: 1.1em;
+            }
+            #back-button-goku {
+                font-size: 1.1em;
+                padding: 12px 25px;
+            }
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Brush+Script+MT&display=swap');
+    </style>
+</head>
+<body>
+
+    <div class="dragon-ball-rain" id="dragonBallRain"></div>
+
+    <h3>Frases de Goku</h3>
+
+    <div class="content-wrapper">
+        <div class="goku-image-container">
+            <img src="https://ik.imagekit.io/Httpm/Goku_Base_Manga.png?updatedAt=1751237169876" alt="Goku" class="goku-image">
+        </div>
+
+        <div class="text-box">
+            <p class="intro-text">A diferencia de Sonic, estas frases son para expresar el amor que yo te tengo pero con el estilo de una de mis series favoritas. Puede que no entiendas algunas, pero eso no cambia el hecho de que simbolizan el amor que siempre te quiero brindar.</p>
+        </div>
+
+        <div class="text-box">
+            <p class="frase">«Si tu belleza fuera Ki, sería más de 9000»</p>
+        </div>
+
+        <div class="text-box">
+            <p class="frase">«El amor que siento por ti es como Mr. Satan… cobarde, pero nunca muere»</p>
+        </div>
+
+        <div class="text-box">
+            <p class="frase">«Cuando se quiere mucho a alguien, esa persona nunca muere»</p>
+        </div>
+
+        <div class="text-box">
+            <p class="frase">«Si me dejas, ninguna semilla del ermitaño podrá curar mi corazón roto»</p>
+        </div>
+
+        <div class="text-box">
+            <p class="frase">«Nada me haría más poderoso que vivir fusionado a ti»</p>
+        </div>
+
+        <div class="text-box">
+            <p class="frase">«Ser un héroe está bien, pero no hay que olvidar que la familia es lo primero»</p>
+        </div>
+
+        <div class="text-box">
+            <p class="frase">«Tengo familia propia ahora que tengo que atender, dos niños y una esposa. Una muy iracunda esposa que debe querer matarme ahora»</p>
+        </div>
+
+        <div class="text-box">
+            <p class="frase">«No importa dónde estés, siempre sentiré tu Ki»</p>
+        </div>
+
+        <div class="text-box">
+            <p class="frase">«En el verdadero amor no manda nadie… obedecen los dos»</p>
+        </div>
+
+        <div class="text-box">
+            <p class="frase">«No sé si esta vez pueda proteger la Tierra, pero te prometo que te protegeré a ti»</p>
+        </div>
+
+        <div class="text-box">
+            <p class="frase">«Peleaste muy bien, te felicito. Por favor, hijo, dile a tu mamá que me disculpe, siempre hice las cosas a mi manera, sin hacerle caso…»</p>
+        </div>
+
+        <div class="text-box">
+            <p class="frase">«Cuando las palabras no alcanzan, los abrazos lo dicen todo»</p>
+        </div>
+
+        <div class="text-box">
+            <p class="frase">«A veces tenemos que mirar más allá de lo que queremos y hacer lo mejor para todos»</p>
+        </div>
+
+        <div class="text-box">
+            <p class="frase">«Hay veces en las que un gesto lo dice todo»</p>
+        </div>
+
+        <div class="text-box">
+            <p class="frase">«Prefiero ser un mono descerebrado que un monstruo sin corazón»</p>
+        </div>
+
+    </div>
+
+    <button id="back-button-goku" onclick="history.back()">Regresar a Ficción</button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const rainContainer = document.getElementById('dragonBallRain');
+            const numberOfDragonBalls = 30; // Cuántas esferas caen a la vez
+
+            function createDragonBall() {
+                const dragonBall = document.createElement('div');
+                dragonBall.classList.add('dragon-ball');
+                dragonBall.style.left = Math.random() * 100 + 'vw'; // Posición horizontal aleatoria
+                dragonBall.style.animationDuration = (Math.random() * 5) + 5 + 's'; // Duración aleatoria (5-10s)
+                dragonBall.style.animationDelay = Math.random() * 5 + 's'; // Retraso aleatorio
+                rainContainer.appendChild(dragonBall);
+
+                // Eliminar la esfera cuando termina la animación para liberar memoria
+                dragonBall.addEventListener('animationend', () => {
+                    dragonBall.remove();
+                    createDragonBall(); // Crear una nueva esfera para el efecto infinito
+                });
+            }
+
+            // Crear las esferas iniciales
+            for (let i = 0; i < numberOfDragonBalls; i++) {
+                createDragonBall();
+            }
+        });
+    </script>
+
+</body>
+</html>

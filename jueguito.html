@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>¡El Jueguito de Sonic!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            overflow: hidden; /* Evitar barras de scroll */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Asegura que el body ocupe toda la altura */
+            background-color: #333; /* Fondo de respaldo */
+            -webkit-user-select: none; /* Deshabilita la selección de texto en iOS */
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none; /* Deshabilita la selección de texto */
+            touch-action: manipulation; /* Mejora la respuesta táctil */
+            position: relative; /* Para posicionar el mensaje especial */
+        }
+
+        #gameContainer {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #gameCanvas {
+            background-color: #222; /* Color de respaldo si el fondo no carga */
+            display: block;
+            position: absolute;
+            z-index: 1; /* Detrás de la información, Game Over y controles */
+        }
+
+        #gameInfo {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5em;
+            color: white;
+            z-index: 10;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+        }
+
+        #gameOverScreen {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            z-index: 15;
+            text-align: center;
+        }
+
+        #gameOverScreen h2 {
+            margin-bottom: 10px;
+            color: #FFC0CB;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.8);
+        }
+        #gameOverScreen p {
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+        }
+
+        .action-button {
+            padding: 15px 30px;
+            background-color: #888;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            margin: 20px 10px;
+            z-index: 20;
+        }
+        .action-button:hover {
+            background-color: #666;
+            transform: translateY(-2px);
+        }
+
+        #touchControls {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-sizing: border-box;
+            z-index: 20; /* Asegura que los controles estén por encima de todo */
+        }
+
+        .touch-button {
+            background-color: rgba(100, 100, 100, 0.7);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%; /* Botones circulares */
+            width: 70px; /* Tamaño de los botones */
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em;
+            font-weight: bold;
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0); /* Quitar el resaltado azul al tocar */
+        }
+
+        #jumpButton {
+            background-color: rgba(0, 120, 200, 0.7); /* Color diferente para el botón de salto */
+        }
+
+        #specialMessage {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3em;
+            color: #FFC0CB;
+            z-index: 25;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.8);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="gameContainer">
+        <div id="gameInfo">
+            Puntuación: <span id="score">0</span>
+        </div>
+        <canvas id="gameCanvas"></canvas>
+        <div id="gameOverScreen">
+            <h2>¡Juego Terminado!</h2>
+            <p>Tu puntuación final: <span id="finalScore">0</span></p>
+            <button id="restartGameButton" class="action-button">Jugar de Nuevo</button>
+            <button id="backToCartaButton" class="action-button">Volver a la Carta</button>
+        </div>
+
+        <div id="touchControls">
+            <div class="touch-button" id="leftButton">&lt;</div>
+            <div class="touch-button" id="rightButton">&gt;</div>
+            <div class="touch-button" id="jumpButton">^</div>
+        </div>
+
+        <div id="specialMessage"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- Obtención de elementos del DOM ---
+            const gameContainer = document.getElementById('gameContainer');
+            const gameCanvas = document.getElementById('gameCanvas');
+            const ctx = gameCanvas.getContext('2d');
+            const scoreDisplay = document.getElementById('score');
+            const gameOverScreen = document.getElementById('gameOverScreen');
+            const finalScoreDisplay = document.getElementById('finalScore');
+            const restartGameButton = document.getElementById('restartGameButton');
+            const backToCartaButton = document.getElementById('backToCartaButton');
+            const specialMessageDiv = document.getElementById('specialMessage');
+
+            const leftButton = document.getElementById('leftButton');
+            const rightButton = document.getElementById('rightButton');
+            const jumpButton = document.getElementById('jumpButton');
+            const touchControls = document.getElementById('touchControls');
+
+            // --- Variables de Estado del Juego y Control ---
+            let keys = {}; // Para el control de teclado
+            // --- AQUI SE DECLARA 'touchMoveDirection' UNA SOLA VEZ ---
+            let touchMoveDirection = 0; // -1 para izquierda, 1 para derecha, 0 para inactivo
+
+            let score = 0;
+            let gameRunning = false;
+            let animationFrameId; // Para almacenar el ID de requestAnimationFrame
+            let gameEnded = false; // Flag para indicar que el juego ha terminado con el mensaje especial
+
+            // --- Variables de Tiempo y Movimiento ---
+            let hasMovedSinceStart = false; // Flag para saber si Sonic se ha movido desde el inicio del juego
+            let movementStartTime = null; // Tiempo cuando Sonic empieza a moverse por primera vez
+            const initialBackgroundSpeed = 4; // Velocidad base del fondo
+            let currentBackgroundSpeed = 0; // Velocidad actual del fondo (depende de la dirección de Sonic)
+
+            // --- Variables de Parallax ---
+            let backgroundX = 0;
+            let groundX = 0;
+            const backgroundParallaxFactor = 0.5; // Ajuste para el efecto parallax del fondo
+            const groundParallaxFactor = 1.0; // Ajuste para el efecto parallax del suelo
+
+            // --- Dimensiones del Juego (inicializadas en resizeGameElements) ---
+            let groundY; // Posición Y del suelo
+            let gameHeight;
+            let gameWidth;
+            let playerCenterX; // Centro horizontal de Sonic
+
+            // --- Variables de Jugador (Sonic) ---
+            let player = {
+                y: 0,
+                width: 120,
+                height: 120,
+                velocityY: 0,
+                gravity: 0.8,
+                jumpStrength: -18,
+                isJumping: false,
+                isFacingRight: true,
+                image: new Image(),
+                groundImage: new Image(),
+                jumpImage: new Image(),
+                idleImage: new Image(),
+                speed: 5, // Velocidad de movimiento (aunque Sonic está fijo, afecta la percepción)
+                x: 0, // La posición x de Sonic se calculará para estar en el centro
+                backgroundWidth: 0 // Ancho de la imagen de fondo, se cargará después
+            };
+
+            // --- Variables de Corazón ---
+            let heart = null; // Un solo corazón
+            let heartImage = new Image();
+            const heartWidth = 50;
+            const heartHeight = 50;
+            let heartSpawned = false; // Para controlar si el corazón ya apareció
+            const heartSpawnDelay = 10000; // 10 segundos en milisegundos para que aparezca el corazón
+            let heartSpawnTimer = null; // Para almacenar el temporizador de aparición del corazón
+
+            // --- Variables de Fuegos Artificiales ---
+            let fireworks = []; // Array para los fuegos artificiales de corazón
+            const fireworksLife = 80; // Duración de los fuegos artificiales en frames
+            const fireworksGravity = 0.3;
+            const fireworksVelocityY = -7;
+
+            // --- Variables de Fondo ---
+            let backgroundIsBlack = false; // Nuevo flag para el fondo negro
+
+            // --- Imágenes del Juego ---
+            const sonicGroundImageSrc = 'https://ik.imagekit.io/Httpm/945f7e9968d1da2c0614c9f944961c47.gif?updatedAt=1751296065394'; // Sprite de correr
+            const sonicJumpImageSrc = 'https://ik.imagekit.io/Httpm/dfutpr0-e1a4e3f6-14dc-467e-ba65-4d1a47f0aa2f.gif?updatedAt=1751296065370';   // Sprite de saltar
+            const sonicIdleImageSrc = 'https://ik.imagekit.io/Httpm/favpng_50f078d8a6c6d0ebbfdc2bd1ac4bf6b5.png?updatedAt=1751297780416'; // Nuevo sprite de inactividad
+            const backgroundImageSrc = 'https://ik.imagekit.io/Httpm/images%20(11).jpeg?updatedAt=1751296802714';
+            const groundImageSrc = 'https://ik.imagekit.io/Httpm/images%20(12).jpeg?updatedAt=1751296930572';
+            const heartImageSrc = 'https://www.onlygfx.com/wp-content/uploads/2021/02/6-pixel-heart-6.png'; // URL del corazón
+
+            // Asignación de URLs a los objetos Image
+            player.groundImage.src = sonicGroundImageSrc;
+            player.jumpImage.src = sonicJumpImageSrc;
+            player.idleImage.src = sonicIdleImageSrc;
+            player.image = player.idleImage; // Sonic comienza en estado inactivo
+
+            let backgroundImage = new Image();
+            backgroundImage.src = backgroundImageSrc;
+            let groundTextureImage = new Image();
+            groundTextureImage.src = groundImageSrc;
+            heartImage.src = heartImageSrc;
+
+            // Variables para futuros obstáculos (no usados actualmente pero definidos)
+            let obstacles = [];
+
+            // --- Funciones del Juego ---
+
+            function resizeGameElements() {
+                gameCanvas.width = window.innerWidth;
+                gameCanvas.height = window.innerHeight;
+                playerCenterX = gameCanvas.width / 2 - player.width / 2;
+                player.x = playerCenterX;
+
+                groundY = gameCanvas.height * 0.8;
+                player.y = groundY - player.height;
+
+                if (backgroundImage.complete) {
+                    player.backgroundWidth = backgroundImage.width;
+                } else {
+                    player.backgroundWidth = gameCanvas.width;
+                }
+            }
+
+            function drawPlayer() {
+                ctx.save();
+                if (!player.isFacingRight) {
+                    ctx.translate(player.x + player.width, player.y);
+                    ctx.scale(-1, 1);
+                    ctx.drawImage(player.image, 0, 0, player.width, player.height);
+                } else {
+                    ctx.drawImage(player.image, player.x, player.y, player.width, player.height);
+                }
+                ctx.restore();
+            }
+
+            function drawHeart() {
+                if (heart && heartImage.complete) {
+                    ctx.drawImage(heartImage, heart.x, heart.y, heartWidth, heartHeight);
+                }
+            }
+
+            function drawFireworks() {
+                fireworks.forEach((firework, index) => {
+                    if (heartImage.complete) {
+                        ctx.drawImage(heartImage, firework.x, firework.y, 30, 30);
+                    }
+                    firework.y += firework.velocityY;
+                    firework.velocityY += fireworksGravity;
+                    firework.life--;
+                    if (firework.life <= 0) {
+                        fireworks.splice(index, 1);
+                    }
+                });
+            }
+
+            function checkCollision(rect1, rect2) {
+                return rect1.x < rect2.x + rect2.width &&
+                       rect1.x + rect1.width > rect2.x &&
+                       rect1.y < rect2.y + rect2.height &&
+                       rect1.y + rect1.height > rect2.y;
+            }
+
+            function updateGame() {
+                if (!gameRunning || gameEnded) return;
+
+                ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+
+                let movingHorizontally = false;
+                let desiredDirection = 0;
+
+                if (keys['ArrowRight'] || keys['d'] || touchMoveDirection === 1) {
+                    movingHorizontally = true;
+                    desiredDirection = 1;
+                    player.isFacingRight = true;
+                }
+                if (keys['ArrowLeft'] || keys['a'] || touchMoveDirection === -1) {
+                    movingHorizontally = true;
+                    desiredDirection = -1;
+                    player.isFacingRight = false;
+                }
+
+                if (movingHorizontally && !hasMovedSinceStart) {
+                    movementStartTime = Date.now();
+                    hasMovedSinceStart = true;
+                    heartSpawnTimer = setTimeout(() => {
+                        const heartY = groundY - player.height - 150; // Ajusta este valor si necesitas que sea más o menos alto
+                        const heartX = gameCanvas.width / 2 - heartWidth / 2;
+                        heart = { x: heartX, y: heartY, width: heartWidth, height: heartHeight, collected: false };
+                        heartSpawned = true;
+                    }, heartSpawnDelay);
+                }
+
+                if (movingHorizontally) {
+                    currentBackgroundSpeed = initialBackgroundSpeed * desiredDirection;
+                } else {
+                    currentBackgroundSpeed = 0;
+                }
+
+                if (heart && heartSpawned) {
+                    heart.x -= currentBackgroundSpeed * groundParallaxFactor;
+                }
+                obstacles.forEach(hole => {
+                    hole.x -= currentBackgroundSpeed * groundParallaxFactor;
+                });
+                obstacles = obstacles.filter(hole => hole.x + hole.width > 0);
+
+                if (backgroundIsBlack) {
+                    ctx.fillStyle = 'black';
+                    ctx.fillRect(0, 0, gameCanvas.width, groundY);
+                } else if (backgroundImage.complete) {
+                    backgroundX += currentBackgroundSpeed * backgroundParallaxFactor;
+                    if (currentBackgroundSpeed > 0 && backgroundX > player.backgroundWidth) {
+                        backgroundX -= player.backgroundWidth;
+                    } else if (currentBackgroundSpeed < 0 && backgroundX < -player.backgroundWidth) {
+                        backgroundX += player.backgroundWidth;
+                    }
+                    ctx.drawImage(backgroundImage, backgroundX, 0, player.backgroundWidth, gameCanvas.height);
+                    ctx.drawImage(backgroundImage, backgroundX - Math.sign(currentBackgroundSpeed) * player.backgroundWidth, 0, player.backgroundWidth, gameCanvas.height);
+                } else {
+                    ctx.fillStyle = '#222';
+                    ctx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
+                }
+
+                if (groundTextureImage.complete) {
+                    groundX += currentBackgroundSpeed * groundParallaxFactor;
+                    const groundHeightInCanvas = gameCanvas.height - groundY;
+                    if (currentBackgroundSpeed > 0 && groundX > gameCanvas.width) {
+                        groundX -= gameCanvas.width;
+                    } else if (currentBackgroundSpeed < 0 && groundX < -gameCanvas.width) {
+                        groundX += gameCanvas.width;
+                    }
+                    ctx.drawImage(groundTextureImage, groundX, groundY, gameCanvas.width, groundHeightInCanvas);
+                    ctx.drawImage(groundTextureImage, groundX - Math.sign(currentBackgroundSpeed) * gameCanvas.width, groundY, gameCanvas.width, groundHeightInCanvas);
+                } else {
+                    ctx.fillStyle = 'lightgray';
+                    ctx.fillRect(0, groundY, gameCanvas.width, 5);
+                }
+
+                player.velocityY += player.gravity;
+                player.y += player.velocityY;
+
+                if (player.y + player.height > groundY) {
+                    player.y = groundY - player.height;
+                    player.velocityY = 0;
+                    player.isJumping = false;
+                    if (!movingHorizontally) {
+                        player.image = player.idleImage;
+                    } else {
+                        player.image = player.groundImage;
+                    }
+                } else if (player.isJumping && player.velocityY > 0) {
+                    player.image = player.jumpImage;
+                }
+
+                drawHeart();
+                if (heart && !heart.collected && checkCollision(player, heart) && player.isJumping) {
+                    heart.collected = true;
+                    backgroundIsBlack = true;
+                    currentBackgroundSpeed = 0;
+                    if (heartSpawnTimer) clearTimeout(heartSpawnTimer);
+
+                    for (let i = 0; i < 10; i++) {
+                        fireworks.push({
+                            x: heart.x + heartWidth / 2 + (Math.random() - 0.5) * 80,
+                            y: heart.y + heartHeight / 2 + (Math.random() - 0.5) * 80,
+                            velocityY: fireworksVelocityY - Math.random() * 4,
+                            life: fireworksLife
+                        });
+                    }
+
+                    document.getElementById('gameInfo').style.display = 'none';
+                    document.getElementById('touchControls').style.display = 'none';
+
+                    setTimeout(() => {
+                        specialMessageDiv.textContent = "Te amo Lucia";
+                        specialMessageDiv.style.display = 'block';
+                        gameEnded = true;
+                    }, 1500);
+                }
+
+                drawFireworks();
+                drawPlayer();
+
+                if (!gameEnded) {
+                    animationFrameId = requestAnimationFrame(updateGame);
+                }
+            }
+
+            function startGame() {
+                resizeGameElements();
+                player.velocityY = 0;
+                player.isJumping = false;
+                player.isFacingRight = true;
+                player.image = player.idleImage;
+
+                heart = null;
+                heartSpawned = false;
+                if (heartSpawnTimer) clearTimeout(heartSpawnTimer);
+                fireworks = [];
+                score = 0;
+                scoreDisplay.textContent = score;
+                backgroundX = 0;
+                groundX = 0;
+
+                gameOverScreen.style.display = 'none';
+                specialMessageDiv.style.display = 'none';
+                document.getElementById('gameInfo').style.display = 'block';
+                if (detectTouchDevice()) {
+                    touchControls.style.display = 'flex';
+                }
+
+                gameRunning = true;
+                gameEnded = false;
+                hasMovedSinceStart = false;
+                movementStartTime = null;
+                backgroundIsBlack = false;
+
+                ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+
+                if (backgroundImage.complete) {
+                    ctx.drawImage(backgroundImage, 0, 0, player.backgroundWidth, gameCanvas.height);
+                }
+                if (groundTextureImage.complete) {
+                    const groundHeightInCanvas = gameCanvas.height - groundY;
+                    ctx.drawImage(groundTextureImage, 0, groundY, gameCanvas.width, groundHeightInCanvas);
+                }
+
+                drawPlayer();
+
+                if (animationFrameId) cancelAnimationFrame(animationFrameId);
+                animationFrameId = requestAnimationFrame(updateGame);
+            }
+
+            function endGame() {
+                gameRunning = false;
+                cancelAnimationFrame(animationFrameId);
+                finalScoreDisplay.textContent = score;
+                gameOverScreen.style.display = 'flex';
+                document.getElementById('gameInfo').style.display = 'none';
+                document.getElementById('touchControls').style.display = 'none';
+            }
+
+            function playerJump() {
+                if (!player.isJumping && gameRunning && !gameEnded) {
+                    player.velocityY = player.jumpStrength;
+                    player.isJumping = true;
+                    player.image = player.jumpImage;
+                }
+            }
+
+            restartGameButton.addEventListener('click', startGame);
+            backToCartaButton.addEventListener('click', () => {
+                window.close();
+            });
+
+            document.addEventListener('keydown', e => {
+                if (gameRunning && !gameEnded) {
+                    keys [e.key] = true;
+                    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.key)) {
+                        e.preventDefault();
+                    }
+                    if (e.code === 'Space' || e.key === 'w' || e.key === 'ArrowUp') {
+                        playerJump();
+                    }
+                }
+            });
+
+            document.addEventListener('keyup', e => {
+                if (gameRunning && !gameEnded) {
+                    keys [e.key] = false;
+                }
+            });
+
+            // --- AQUI SE ELIMINO LA DECLARACION DUPLICADA DE 'touchMoveDirection' ---
+            // let touchMoveDirection = 0; // Esta línea ha sido eliminada
+
+            function handleTouchStart(e, direction) {
+                e.preventDefault();
+                if (!gameRunning || gameEnded) return;
+                if (direction === 'jump') {
+                    playerJump();
+                } else if (direction === 'left') {
+                    touchMoveDirection = -1;
+                } else if (direction === 'right') {
+                    touchMoveDirection = 1;
+                }
+            }
+
+            function handleTouchEnd(e, direction) {
+                e.preventDefault();
+                if (!gameRunning || gameEnded) return;
+                if (direction === 'left' && touchMoveDirection === -1) {
+                    touchMoveDirection = 0;
+                } else if (direction === 'right' && touchMoveDirection === 1) {
+                    touchMoveDirection = 0;
+                }
+            }
+
+            jumpButton.addEventListener('touchstart', (e) => handleTouchStart(e, 'jump'), { passive: false });
+            jumpButton.addEventListener('touchend', (e) => handleTouchEnd(e, 'jump'));
+
+            leftButton.addEventListener('touchstart', (e) => handleTouchStart(e, 'left'), { passive: false });
+            leftButton.addEventListener('touchend', (e) => handleTouchEnd(e, 'left'));
+
+            rightButton.addEventListener('touchstart', (e) => handleTouchStart(e, 'right'), { passive: false });
+            rightButton.addEventListener('touchend', (e) => handleTouchEnd(e, 'right'));
+
+            function detectTouchDevice() {
+                return ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
+            }
+
+            if (!detectTouchDevice()) {
+                touchControls.style.display = 'none';
+            }
+
+            let imagesLoadedCount = 0;
+            const totalImagesToLoad = 6;
+
+            const imageLoadHandler = () => {
+                imagesLoadedCount++;
+                if (imagesLoadedCount === totalImagesToLoad) {
+                    resizeGameElements();
+                    startGame();
+                }
+            };
+
+            player.groundImage.onload = imageLoadHandler;
+            player.jumpImage.onload = imageLoadHandler;
+            player.idleImage.onload = imageLoadHandler;
+            backgroundImage.onload = imageLoadHandler;
+            groundTextureImage.onload = imageLoadHandler;
+            heartImage.onload = imageLoadHandler;
+
+            if (player.groundImage.complete) imagesLoadedCount++;
+            if (player.jumpImage.complete) imagesLoadedCount++;
+            if (player.idleImage.complete) imagesLoadedCount++;
+            if (backgroundImage.complete) imagesLoadedCount++;
+            if (groundTextureImage.complete) imagesLoadedCount++;
+            if (heartImage.complete) imagesLoadedCount++;
+
+            if (imagesLoadedCount === totalImagesToLoad) {
+                resizeGameElements();
+                startGame();
+            }
+        });
+    </script>
+
+</body>
+</html>

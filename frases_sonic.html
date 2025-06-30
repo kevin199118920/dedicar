@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frases de Sonic y sus Amigos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: black; /* Fondo negro */
+            margin: 0;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 30px 20px;
+            box-sizing: border-box;
+            color: white;
+            position: relative; /* Necesario para los elementos flotantes */
+            z-index: 1; /* Asegura que el contenido esté por encima de la lluvia */
+        }
+
+        /* Estilos de la lluvia de Sonics */
+        .sonic-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Permite interactuar con los elementos debajo */
+            overflow: hidden;
+            z-index: 0; /* Asegura que esté detrás del contenido */
+        }
+
+        .sonic-gif {
+            position: absolute;
+            background-image: url('https://ik.imagekit.io/Httpm/a06dcad86d7d3e764c2a5b69f2121230_w200.gif?updatedAt=1751237648177'); /* URL del GIF de Sonic */
+            background-size: contain;
+            background-repeat: no-repeat;
+            width: 50px; /* Tamaño del GIF */
+            height: 50px;
+            animation: fall linear infinite;
+            opacity: 0.7; /* Ligeramente transparente para no distraer */
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.7; }
+            100% { transform: translateY(calc(100vh + 100px)) rotate(360deg); opacity: 0; }
+        }
+
+        /* Contenedor principal del contenido */
+        .content-wrapper { /* Nuevo contenedor sin el fondo azul grande */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 95%;
+            width: 800px;
+            z-index: 10; /* Asegura que el contenido esté sobre la lluvia */
+            position: relative; /* Para que el z-index funcione */
+        }
+
+        .frase-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid rgba(66, 135, 245, 0.5); /* Borde azul de Sonic más distintivo */
+            border-radius: 8px;
+            background-color: rgba(66, 135, 245, 0.08); /* Fondo azul ligeramente más visible */
+            width: 90%; /* Ajustar ancho */
+            max-width: 700px; /* Limitar ancho máximo */
+            box-sizing: border-box;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .character-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+            border: 2px solid #4287f5;
+        }
+
+        .frase {
+            font-size: 1.2em;
+            line-height: 1.4;
+            color: #d1e5fa;
+            text-align: center;
+        }
+
+        .frase span {
+            display: block;
+            font-style: italic;
+            font-size: 0.9em;
+            margin-top: 5px;
+            color: #a7c0f0;
+        }
+
+        h3 { /* Estilo para el título de la página */
+            color: #4287f5;
+            font-family: 'Brush Script MT', cursive;
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #4287f5, 0 0 20px #ffffff;
+            font-size: clamp(2em, 8vw, 3em);
+            text-align: center;
+            width: 100%;
+            z-index: 10;
+            position: relative;
+        }
+
+        #back-button-sonic {
+            padding: 15px 30px;
+            background-color: #ff4500;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            margin-top: 30px;
+            z-index: 10;
+            position: relative;
+        }
+        #back-button-sonic:hover {
+            background-color: #e63900;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 600px) {
+            .frase-container {
+                width: 95%;
+                padding: 15px;
+            }
+            .character-image {
+                width: 80px;
+                height: 80px;
+            }
+            .frase {
+                font-size: 1em;
+            }
+            #back-button-sonic {
+                font-size: 1.1em;
+                padding: 12px 25px;
+            }
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Brush+Script+MT&display=swap');
+    </style>
+</head>
+<body>
+
+    <div class="sonic-rain" id="sonicRain"></div>
+
+    <h3>Frases de Sonic y sus Amigos</h3>
+
+    <div class="content-wrapper">
+        <div class="frase-container">
+            <img src="https://ik.imagekit.io/Httpm/images%20(5).jpeg?updatedAt=1751236364254" alt="Sonic el Erizo" class="character-image">
+            <p class="frase">"Un verdadero héroe no es el que nunca falla, sino el que nunca se rinde." <span class="author">— Sonic el Erizo</span></p>
+        </div>
+
+        <div class="frase-container">
+            <img src="https://ik.imagekit.io/Httpm/images%20(6).jpeg?updatedAt=1751236364215" alt="Sonic el Erizo" class="character-image">
+            <p class="frase">"¿Necesito una razón para querer ayudar a un amigo?" <span class="author">— Sonic (Sonic Unleashed)</span></p>
+        </div>
+
+        <div class="frase-container">
+            <img src="https://ik.imagekit.io/Httpm/Classic_Sonic.png?updatedAt=1751233118159" alt="Sonic el Erizo" class="character-image">
+            <p class="frase">"¡No tengo amo, excepto el viento que sopla libre!" <span class="author">— Sonic (Sonic And The Black Knight)</span></p>
+        </div>
+
+        <div class="frase-container">
+            <img src="https://ik.imagekit.io/Httpm/images%20(7).jpeg?updatedAt=1751236364379" alt="Sonic el Erizo" class="character-image">
+            <p class="frase">"Nunca se trató de la caballería para mí. Simplemente tengo que hacer lo que tengo que hacer, ¡eso es todo!" <span class="author">— Sonic (Sonic And The Black Knight)</span></p>
+        </div>
+
+        <div class="frase-container">
+            <img src="https://ik.imagekit.io/Httpm/images%20(8).jpeg?updatedAt=1751236364243" alt="Sonic el Erizo" class="character-image">
+            <p class="frase">"Todo mundo tiene su fin. Sé que es un poco triste, pero... por eso debemos vivir la vida al máximo en el tiempo que tenemos." <span class="author">— Sonic (Sonic y el Caballero Negro)</span></p>
+        </div>
+
+        <div class="frase-container">
+            <img src="https://ik.imagekit.io/Httpm/20180310003441!Advance2_knuckles.png?updatedAt=1751236364872" alt="Knuckles" class="character-image">
+            <p class="frase">"Los sueños no nos traicionan. Cuando nos perdemos a nosotros mismos, es cuando perdemos nuestros sueños." <span class="author">— Knuckles (Sonic Shuffle)</span></p>
+        </div>
+
+        <div class="frase-container">
+            <img src="https://ik.imagekit.io/Httpm/images%20(9).jpeg?updatedAt=1751236364260" alt="Sonic el Erizo" class="character-image">
+            <p class="frase">"Está bien si a veces todavía necesitas ayuda. Eso es parte del crecimiento." <span class="author">— Sonic (Sonic Frontiers)</span></p>
+        </div>
+
+        <div class="frase-container">
+            <img src="https://ik.imagekit.io/Httpm/d13123553d5a05ebd2f3217db24b35c13131e1cdcf9c5aeb1552ba8e67efd4d9.png?updatedAt=1751236364418" alt="Sonic el Erizo" class="character-image">
+            <p class="frase">"Nada empieza hasta que actúas. Si tienes tiempo para preocuparte, corre." <span class="author">— Sonic (Sonic '06)</span></p>
+        </div>
+
+    </div>
+
+    <button id="back-button-sonic" onclick="history.back()">Regresar a Ficción</button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const rainContainer = document.getElementById('sonicRain');
+            const numberOfSonics = 25; // Cuántos Sonics caen a la vez
+
+            function createSonicGif() {
+                const sonicGif = document.createElement('div');
+                sonicGif.classList.add('sonic-gif');
+                sonicGif.style.left = Math.random() * 100 + 'vw'; // Posición horizontal aleatoria
+                sonicGif.style.animationDuration = (Math.random() * 5) + 5 + 's'; // Duración aleatoria (5-10s)
+                sonicGif.style.animationDelay = Math.random() * 5 + 's'; // Retraso aleatorio
+                rainContainer.appendChild(sonicGif);
+
+                // Eliminar el GIF cuando termina la animación para liberar memoria
+                sonicGif.addEventListener('animationend', () => {
+                    sonicGif.remove();
+                    createSonicGif(); // Crear un nuevo GIF para el efecto infinito
+                });
+            }
+
+            // Crear los GIFs iniciales
+            for (let i = 0; i < numberOfSonics; i++) {
+                createSonicGif();
+            }
+        });
+    </script>
+
+</body>
+</html>

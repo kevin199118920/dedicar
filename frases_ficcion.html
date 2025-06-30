@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frases de Ficción</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: black;
+            margin: 0;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 30px 20px;
+            box-sizing: border-box;
+            color: white;
+        }
+
+        .content-container {
+            background-color: rgba(0, 191, 255, 0.1);
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 95%;
+            width: 800px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+            text-align: center;
+            margin-bottom: 30px;
+            box-sizing: border-box;
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            flex-grow: 1;
+        }
+
+        .content-container h3 {
+            color: #00bfff;
+            font-family: 'Brush Script MT', cursive;
+            font-size: 3em;
+            margin-bottom: 25px;
+            text-shadow: 0 0 10px #00bfff, 0 0 20px #ffffff;
+            font-size: clamp(2em, 8vw, 3em);
+        }
+
+        .characters-selection { /* Nuevo contenedor para agrupar imagen y botón */
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start; /* Alinea los grupos al inicio */
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 30px; /* Espacio entre los grupos de personaje */
+        }
+
+        .character-group { /* Contenedor para cada imagen + botón */
+            display: flex;
+            flex-direction: column; /* Apila imagen y botón */
+            align-items: center;
+            gap: 15px; /* Espacio entre imagen y botón */
+            width: 45%; /* Ancho para cada grupo */
+            max-width: 250px; /* Ancho máximo del grupo */
+            box-sizing: border-box;
+        }
+
+        .character-image {
+            width: 100%; /* La imagen ocupa el 100% de su grupo */
+            height: auto;
+            max-height: 200px; /* Limita la altura para que no se extienda demasiado */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            border: 3px solid #00bfff;
+            object-fit: contain; /* Asegura que la imagen completa se vea */
+            background-color: rgba(255, 255, 255, 0.05); /* Fondo sutil para imágenes con transparencia */
+            padding: 5px; /* Pequeño padding interno para que el borde no se pegue */
+        }
+
+        .choice-button {
+            padding: 12px 25px; /* Ajuste del padding para el botón debajo de la imagen */
+            background-color: #ff4500;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.2em; /* Ajuste del tamaño de fuente del botón */
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+            width: 100%; /* Ocupa el 100% del ancho de su grupo */
+            max-width: 200px; /* Ancho máximo para el botón */
+            box-sizing: border-box;
+        }
+        .choice-button:hover {
+            background-color: #e63900;
+            transform: translateY(-2px);
+        }
+
+        #back-button-ficcion {
+            padding: 15px 30px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            margin-top: 40px;
+        }
+        #back-button-ficcion:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 600px) {
+            .content-container {
+                padding: 20px;
+            }
+            .content-container h3 {
+                font-size: 2.2em;
+            }
+            .characters-selection {
+                flex-direction: column; /* Apila los grupos en pantallas pequeñas */
+                align-items: center;
+                gap: 25px; /* Espacio entre grupos apilados */
+            }
+            .character-group {
+                width: 70%; /* Los grupos ocupan más ancho en pantallas pequeñas */
+            }
+            .character-image {
+                max-height: 150px; /* Ajusta altura máxima para móviles */
+            }
+            .choice-button {
+                font-size: 1.1em;
+                padding: 10px 20px;
+                max-width: 180px; /* Ajusta ancho de botón en móviles */
+            }
+            #back-button-ficcion {
+                font-size: 1.1em;
+                padding: 12px 25px;
+            }
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Brush+Script+MT&display=swap');
+    </style>
+</head>
+<body>
+
+    <div class="content-container">
+        <h3>Elige tu Aventura Ficticia</h3>
+        
+        <div class="characters-selection">
+            <div class="character-group">
+                <img src="https://ik.imagekit.io/Httpm/Classic_Sonic.png?updatedAt=1751233118159" alt="Sonic el Erizo" class="character-image">
+                <button class="choice-button" onclick="openFrasesSonic()">Sonic</button>
+            </div>
+
+            <div class="character-group">
+                <img src="https://ik.imagekit.io/Httpm/images.png?updatedAt=1751233056889" alt="Son Goku" class="character-image">
+                <button class="choice-button" onclick="openFrasesGoku()">Goku</button>
+            </div>
+        </div>
+
+    </div>
+
+    <button id="back-button-ficcion" onclick="history.back()">Regresar a Frases</button>
+
+    <script>
+        function openFrasesSonic() {
+            window.open('frases_sonic.html', '_blank');
+        }
+
+        function openFrasesGoku() {
+            window.open('frases_goku.html', '_blank');
+        }
+    </script>
+
+</body>
+</html>
